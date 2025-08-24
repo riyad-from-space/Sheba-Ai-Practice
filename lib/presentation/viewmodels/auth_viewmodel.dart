@@ -1,4 +1,3 @@
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sheba_ai/data/repositories/auth_repositories.dart';
 
@@ -39,17 +38,17 @@ class AuthViewModel extends StateNotifier<AuthState> {
 
   Future<void> login(String username, String password) async {
     state = state.copyWith(isLoading: true, error: null);
-    
+
     final request = LoginRequest(username: username, password: password);
     final result = await _authRepository.login(request);
-    
+
     result.when(
       success: (response) {
         state = state.copyWith(
           isLoading: false,
           isAuthenticated: true,
         );
-        // Fetch user profile after successful login
+
         getProfile();
       },
       failure: (error, statusCode) {
@@ -64,16 +63,16 @@ class AuthViewModel extends StateNotifier<AuthState> {
 
   Future<void> register(String username, String email, String password) async {
     state = state.copyWith(isLoading: true, error: null);
-    
+
     final request = RegisterRequest(
       username: username,
       email: email,
       password: password,
       password2: password,
     );
-    
+
     final result = await _authRepository.register(request);
-    
+
     result.when(
       success: (user) {
         state = state.copyWith(isLoading: false, user: user);
@@ -86,7 +85,7 @@ class AuthViewModel extends StateNotifier<AuthState> {
 
   Future<void> getProfile() async {
     final result = await _authRepository.getProfile();
-    
+
     result.when(
       success: (user) {
         state = state.copyWith(user: user);
@@ -99,7 +98,7 @@ class AuthViewModel extends StateNotifier<AuthState> {
 
   Future<void> logout() async {
     await _authRepository.logout();
-    state = AuthState(); // Reset to initial state
+    state = AuthState();
   }
 
   Future<void> checkAuthStatus() async {
